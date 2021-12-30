@@ -1,10 +1,7 @@
 package com.files.upload.UploadExcelFile.helper;
 
 import com.files.upload.UploadExcelFile.model.Tutorial;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,6 +63,15 @@ public class ExcelHelper {
             Workbook workbook = new XSSFWorkbook(is);
 
             Sheet sheet = workbook.getSheet(SHEET);
+
+            for (int sn=0; sn < workbook.getNumberOfSheets(); sn++) {
+                System.out.println("Sheet " + sn + " is called " + workbook.getSheetName(sn));
+            }
+
+            if (sheet == null) {
+                throw new IllegalArgumentException("No sheet exists with name " + SHEET);
+            }
+
             Iterator<Row> rows = sheet.iterator();
 
             List<Tutorial> tutorials = new ArrayList<Tutorial>();
@@ -102,7 +108,9 @@ public class ExcelHelper {
                             break;
 
                         case 3:
-                            tutorial.setPublished(currentCell.getBooleanCellValue());
+                            //DataFormatter formatter = new DataFormatter();
+                            //String str = formatter.formatCellValue(currentCell);
+                            tutorial.setPublished(Boolean.parseBoolean(currentCell.getStringCellValue()));
                             break;
 
                         default:
